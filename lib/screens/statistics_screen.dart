@@ -387,7 +387,7 @@ class _EcoTipsCardState extends State<_EcoTipsCard> {
   }
 
   void _shuffleTips() {
-    final random = Random();
+    final random = Random(DateTime.now().millisecondsSinceEpoch);
     final shuffled = List<Map<String, String>>.from(_allTips)..shuffle(random);
     setState(() {
       _selectedTips = shuffled.take(4).toList();
