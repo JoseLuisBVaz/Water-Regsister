@@ -1,0 +1,26 @@
+{
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "agua-41cd1",
+          "appId": "1:225929117670:android:837b68f2a1742263f2a027",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "agua-41cd1",
+          "configurations": {
+            "android": "1:225929117670:android:837b68f2a1742263f2a027",
+            "web": "1:225929117670:web:7dc93c41da19260af2a027",
+            "windows": "1:225929117670:web:83f518e70e429aaff2a027"
+          }
+        }
+      }
+    }
+  }
+}

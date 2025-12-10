@@ -1,0 +1,35 @@
+name: awa
+description: "Aplicación para reducir el consumo de agua"
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.5.3
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # Firebase
+  firebase_core: ^3.6.0
+  firebase_auth: ^5.3.1
+  cloud_firestore: ^5.4.4
+  google_sign_in: ^6.2.1
+  
+  # Gestión de estado
+  provider: ^6.1.2
+  
+  # Gráficos
+  fl_chart: ^0.69.0
+  
+  # Utilidades
+  intl: ^0.19.0
+  shared_preferences: ^2.3.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
