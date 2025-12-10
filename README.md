@@ -1,3 +1,9 @@
+# Proyecto Final
+# Elaborado por: Berlanga Vazquez Jose Luis & Flores Rosales Ariel Naim  - 9B ITI
+# Programacion Movil
+# Mtra. Faride Hernández Pérez
+
+
 # AWA - Aplicación de Ahorro de Agua 💧
 
 Aplicación móvil en Flutter con enfoque social/ecológico, destinada a ayudar a las personas a reducir su consumo diario de agua mediante seguimiento, registro y visualización de hábitos.

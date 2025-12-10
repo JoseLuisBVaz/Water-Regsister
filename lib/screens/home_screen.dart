@@ -50,17 +50,57 @@ class _HomeScreenState extends State<HomeScreen> {
         foregroundColor: Colors.white,
         actions: [
           PopupMenuButton(
-            icon: const Icon(Icons.account_circle),
-            itemBuilder: (context) => [
+            icon: CircleAvatar(
+              radius: 16,
+              backgroundColor: Colors.white,
+              backgroundImage: FirebaseAuth.instance.currentUser?.photoURL != null
+                  ? NetworkImage(FirebaseAuth.instance.currentUser!.photoURL!)
+                  : null,
+              child: FirebaseAuth.instance.currentUser?.photoURL == null
+                  ? Icon(
+                      Icons.person,
+                      size: 20,
+                      color: Theme.of(context).colorScheme.primary,
+                    )
+                  : null,
+            ),
+            itemBuilder: (context) => <PopupMenuEntry>[
               PopupMenuItem(
+                enabled: false,
                 child: Row(
                   children: [
-                    const Icon(Icons.person, size: 20),
-                    const SizedBox(width: 8),
-                    Text(FirebaseAuth.instance.currentUser?.email ?? 'Usuario'),
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundImage: FirebaseAuth.instance.currentUser?.photoURL != null
+                          ? NetworkImage(FirebaseAuth.instance.currentUser!.photoURL!)
+                          : null,
+                      child: FirebaseAuth.instance.currentUser?.photoURL == null
+                          ? const Icon(Icons.person)
+                          : null,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            FirebaseAuth.instance.currentUser?.displayName ?? 'Usuario',
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          if (FirebaseAuth.instance.currentUser?.email != null)
+                            Text(
+                              FirebaseAuth.instance.currentUser!.email!,
+                              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
+              const PopupMenuDivider(),
               PopupMenuItem(
                 child: const Row(
                   children: [

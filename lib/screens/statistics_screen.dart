@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/water_consumption_provider.dart';
@@ -311,10 +312,15 @@ class _StatCard extends StatelessWidget {
 
 // ========== CONSEJOS ECOLÓGICOS ==========
 
-class _EcoTipsCard extends StatelessWidget {
+class _EcoTipsCard extends StatefulWidget {
   const _EcoTipsCard();
 
-  final List<Map<String, String>> _tips = const [
+  @override
+  State<_EcoTipsCard> createState() => _EcoTipsCardState();
+}
+
+class _EcoTipsCardState extends State<_EcoTipsCard> {
+  final List<Map<String, String>> _allTips = const [
     {
       'icon': '🚿',
       'title': 'Duchas más cortas',
@@ -335,7 +341,58 @@ class _EcoTipsCard extends StatelessWidget {
       'title': 'Repara fugas',
       'tip': 'Un grifo goteando puede desperdiciar 30 litros por día',
     },
+    {
+      'icon': '🚽',
+      'title': 'Inodoro eficiente',
+      'tip': 'Coloca una botella con arena en el tanque para reducir el agua por descarga',
+    },
+    {
+      'icon': '🧽',
+      'title': 'Lava platos inteligente',
+      'tip': 'Llena el lavabo para lavar en vez de dejar el agua corriendo',
+    },
+    {
+      'icon': '🌧️',
+      'title': 'Aprovecha el agua lluvia',
+      'tip': 'Recoge agua de lluvia para regar plantas y limpiar exteriores',
+    },
+    {
+      'icon': '🚗',
+      'title': 'Lava tu auto con cubeta',
+      'tip': 'Usa una cubeta en lugar de manguera y ahorra hasta 300 litros',
+    },
+    {
+      'icon': '🍽️',
+      'title': 'Lavavajillas eficiente',
+      'tip': 'Usa el lavavajillas solo cuando esté completamente lleno',
+    },
+    {
+      'icon': '👕',
+      'title': 'Lavadora llena',
+      'tip': 'Espera a tener una carga completa antes de usar la lavadora',
+    },
+    {
+      'icon': '❗',
+      'title': 'LaLiLuLeLo',
+      'tip': 'Nuestras memorias no son "solo" sonidos e imágenes. Estos existen, en algún lugar entre los sonidos, en algún lugar entre las imágenes.',
+    },
   ];
+
+  List<Map<String, String>> _selectedTips = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _shuffleTips();
+  }
+
+  void _shuffleTips() {
+    final random = Random();
+    final shuffled = List<Map<String, String>>.from(_allTips)..shuffle(random);
+    setState(() {
+      _selectedTips = shuffled.take(4).toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -348,21 +405,31 @@ class _EcoTipsCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(Icons.lightbulb, color: Colors.green[700]),
-                const SizedBox(width: 8),
-                Text(
-                  'Consejos para ahorrar agua',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green[900],
-                  ),
+                Row(
+                  children: [
+                    Icon(Icons.lightbulb, color: Colors.green[700]),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Consejos para ahorrar agua',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green[900],
+                      ),
+                    ),
+                  ],
+                ),
+                IconButton(
+                  icon: Icon(Icons.refresh, color: Colors.green[700]),
+                  onPressed: _shuffleTips,
+                  tooltip: 'Ver otros consejos',
                 ),
               ],
             ),
             const SizedBox(height: 16),
-            ..._tips.map((tip) => Padding(
+            ..._selectedTips.map((tip) => Padding(
                   padding: const EdgeInsets.only(bottom: 12),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,

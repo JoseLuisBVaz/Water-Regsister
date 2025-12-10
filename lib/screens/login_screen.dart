@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -12,6 +13,42 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
   String? _errorMessage;
+
+  Future<void> _signInWithGoogle() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      if (googleUser == null) {
+        setState(() => _isLoading = false);
+        return;
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      
+      if (mounted) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+        );
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Error al iniciar sesión: $e';
+        _isLoading = false;
+      });
+    }
+  }
 
   Future<void> _signInAnonymously() async {
     setState(() {
@@ -113,34 +150,64 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 64),
                   
-                  // Botón de inicio anónimo
+                  // Botones de autenticación
                   if (_isLoading)
                     const CircularProgressIndicator(color: Colors.white)
-                  else
+                  else ...[
                     ElevatedButton.icon(
-                      onPressed: _signInAnonymously,
-                      icon: const Icon(Icons.water_drop, color: Colors.blue),
+                      onPressed: _signInWithGoogle,
+                      icon: Image.network(
+                        'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg',
+                        height: 24,
+                        errorBuilder: (context, error, stackTrace) => 
+                          const Icon(Icons.login, color: Colors.black87),
+                      ),
                       label: const Text(
-                        'Comenzar',
+                        'Continuar con Google',
                         style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
-                        foregroundColor: Colors.blue,
+                        foregroundColor: Colors.black87,
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 48,
-                          vertical: 18,
+                          horizontal: 24,
+                          vertical: 16,
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        elevation: 5,
+                        elevation: 3,
                       ),
                     ),
+                    const SizedBox(height: 16),
+                    OutlinedButton.icon(
+                      onPressed: _signInAnonymously,
+                      icon: const Icon(Icons.person_outline, color: Colors.white),
+                      label: const Text(
+                        'Continuar sin cuenta',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        side: const BorderSide(color: Colors.white, width: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 16,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ],
                   
                   if (_errorMessage != null) ...[
                     const SizedBox(height: 24),
