@@ -45,25 +45,31 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('AWA - Ahorro de Agua', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('AWAPP - Ahorro de Agua', style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
         actions: [
-          PopupMenuButton(
-            icon: CircleAvatar(
-              radius: 16,
-              backgroundColor: Colors.white,
-              backgroundImage: FirebaseAuth.instance.currentUser?.photoURL != null
-                  ? NetworkImage(FirebaseAuth.instance.currentUser!.photoURL!)
-                  : null,
-              child: FirebaseAuth.instance.currentUser?.photoURL == null
-                  ? Icon(
-                      Icons.person,
-                      size: 20,
-                      color: Theme.of(context).colorScheme.primary,
-                    )
-                  : null,
-            ),
+          StreamBuilder<User?>(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              final user = snapshot.data;
+              final photoURL = user?.photoURL;
+              
+              return PopupMenuButton(
+                icon: CircleAvatar(
+                  radius: 18,
+                  backgroundImage: photoURL != null
+                      ? NetworkImage(photoURL)
+                      : null,
+                  backgroundColor: Colors.white,
+                  child: photoURL == null
+                      ? Icon(
+                          Icons.person,
+                          size: 20,
+                          color: Theme.of(context).colorScheme.primary,
+                        )
+                      : null,
+                ),
             itemBuilder: (context) => <PopupMenuEntry>[
               PopupMenuItem(
                 enabled: false,
@@ -74,6 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       backgroundImage: FirebaseAuth.instance.currentUser?.photoURL != null
                           ? NetworkImage(FirebaseAuth.instance.currentUser!.photoURL!)
                           : null,
+                      backgroundColor: Colors.grey[300],
                       child: FirebaseAuth.instance.currentUser?.photoURL == null
                           ? const Icon(Icons.person)
                           : null,
@@ -114,6 +121,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             ],
+              );
+            },
           ),
         ],
       ),

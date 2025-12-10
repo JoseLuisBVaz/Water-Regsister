@@ -118,7 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   
                   // Título
                   const Text(
-                    'AWA',
+                    'AWAPP',
                     style: TextStyle(
                       fontSize: 48,
                       fontWeight: FontWeight.bold,
