@@ -53,7 +53,7 @@ class WaterConsumptionProvider with ChangeNotifier {
       
       _todayActivities = await _firebaseService.getActivitiesForDay(recordId);
       print('✅ ${_todayActivities.length} actividades de hoy cargadas');
-      print('💧 Total litros calculados: ${totalLitersToday}');
+      print('💧 Total litros calculados: $totalLitersToday');
       
       // Cargar consumo global
       _globalConsumption = await _firebaseService.getGlobalConsumption();

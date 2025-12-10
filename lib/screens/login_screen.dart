@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -13,47 +12,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
   String? _errorMessage;
-
-  Future<void> _signInWithGoogle() async {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
-
-    try {
-      // Trigger the authentication flow
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-      if (googleUser == null) {
-        // El usuario canceló el login
-        setState(() => _isLoading = false);
-        return;
-      }
-
-      // Obtain the auth details from the request
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-
-      // Create a new credential
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      // Once signed in, navigate to home
-      await FirebaseAuth.instance.signInWithCredential(credential);
-      
-      if (mounted) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
-        );
-      }
-    } catch (e) {
-      setState(() {
-        _errorMessage = 'Error al iniciar sesión: $e';
-        _isLoading = false;
-      });
-    }
-  }
 
   Future<void> _signInAnonymously() async {
     setState(() {
@@ -155,64 +113,34 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 64),
                   
-                  // Botón de Google Sign In
+                  // Botón de inicio anónimo
                   if (_isLoading)
                     const CircularProgressIndicator(color: Colors.white)
-                  else ...[
+                  else
                     ElevatedButton.icon(
-                      onPressed: _signInWithGoogle,
-                      icon: Image.network(
-                        'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg',
-                        height: 24,
-                        errorBuilder: (context, error, stackTrace) => 
-                          const Icon(Icons.login, color: Colors.black87),
-                      ),
+                      onPressed: _signInAnonymously,
+                      icon: const Icon(Icons.water_drop, color: Colors.blue),
                       label: const Text(
-                        'Continuar con Google',
+                        'Comenzar',
                         style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
-                        foregroundColor: Colors.black87,
+                        foregroundColor: Colors.blue,
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 16,
+                          horizontal: 48,
+                          vertical: 18,
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(30),
                         ),
-                        elevation: 3,
+                        elevation: 5,
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    OutlinedButton.icon(
-                      onPressed: _signInAnonymously,
-                      icon: const Icon(Icons.person_outline, color: Colors.white),
-                      label: const Text(
-                        'Continuar sin cuenta',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        side: const BorderSide(color: Colors.white, width: 2),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 16,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                  ],
                   
                   if (_errorMessage != null) ...[
                     const SizedBox(height: 24),

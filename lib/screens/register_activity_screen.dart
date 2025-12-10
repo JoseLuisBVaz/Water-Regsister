@@ -171,7 +171,7 @@ class _RegisterActivityScreenState extends State<RegisterActivityScreen> {
                             border: InputBorder.none,
                             prefixIcon: Icon(Icons.water_drop),
                           ),
-                          value: _selectedActivityType,
+                          initialValue: _selectedActivityType,
                           items: provider.activityTypes.map((type) {
                             return DropdownMenuItem(
                               value: type,
